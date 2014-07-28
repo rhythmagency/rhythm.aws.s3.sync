@@ -7,7 +7,7 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    'download-media-s3': {
+    'download-s3-bucket': {
       options: {
           bucket: grunt.option('bucket') || ''
       },
@@ -16,10 +16,9 @@ module.exports = function(grunt) {
     }
   });
 
-  // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-contrib-download-media-s3');
+  grunt.loadNpmTasks('grunt-contrib-download-s3-bucket');
 
   // Default task(s).
-  grunt.registerTask('default', ['download-media-s3']);
+  grunt.registerTask('default', ['download-s3-bucket']);
 
 };
