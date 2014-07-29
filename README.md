@@ -3,6 +3,17 @@ rhythm.aws.s3.sync
 
 Synchronize local files with S3.
 
+#### Example Gruntfile.js
+
+    module.exports = function(grunt) {
+        //Register the tasks from the rhythm.aws.s3.sync Gruntfile
+        var s3Sync = require('rhythm.aws.s3.sync/Gruntfile.js');
+        s3Sync(grunt);
+        
+        //Continue normal configuration
+        grunt.config.data.pkg = grunt.file.readJSON('package.json');
+        grunt.initConfig(grunt.config.data);
+    };
 
 #### Usage:
 
