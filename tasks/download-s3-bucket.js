@@ -19,6 +19,13 @@ module.exports = function(grunt) {
 
         console.log(options);
 
+        if(fs.existsSync('./awsconfig.json'))
+            AWS.config.loadFromPath('./awsconfig.json');
+
+        console.log(AWS.config.credentials);
+
+        var s3 = new AWS.S3();
+
         var done = this.async();
         var taskCount = 0;
         var allTasksOK = true;
@@ -104,13 +111,6 @@ module.exports = function(grunt) {
                 completeTask(true);
             }
         };
-
-        if(fs.existsSync('./awsconfig.json'))
-            AWS.config.loadFromPath('./awsconfig.json');
-
-        console.log(AWS.config.credentials);
-
-        var s3 = new AWS.S3();
 
         var params = {
             Bucket: options.bucket, // required
