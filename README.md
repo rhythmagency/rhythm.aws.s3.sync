@@ -8,6 +8,7 @@ Synchronize local files with S3.
 
     $ grunt download --bucket=NAME_OF_S3_BUCKET
     $ grunt upload --bucket=NAME_OF_S3_BUCKET --files=REL_PATH_DEFAULT_IS_CURRENT_PATH
+    $ grunt clear-upload --bucket=NAME_OF_S3_BUCKET
 
 #### Optionally overwrite local files:
 
