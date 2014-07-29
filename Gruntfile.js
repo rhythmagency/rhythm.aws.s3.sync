@@ -18,8 +18,7 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-download-s3-bucket');
-
     grunt.registerTask('download', ['download-s3-bucket']);
 
+    grunt.loadTasks(__dirname + '/tasks');
 };
