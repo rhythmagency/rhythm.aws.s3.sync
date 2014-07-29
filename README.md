@@ -12,13 +12,13 @@ Synchronize local files with S3.
 
     $ grunt download --bucket=NAME_OF_S3_BUCKET --overwrite=yes
 
-### Amazon credentials are read from ./awsconfig.json with a fallback of ~/.aws/credentials
+### Amazon credentials are read from ./awsconfig.json with a fallback to ~/.aws/credentials
 
 #### Example awsconfig.json
 
     {
-    "accessKeyId": "ACCESS_KEY_ID",
-    "secretAccessKey": "SECRET_ACCESS_KEY"
+        "accessKeyId": "ACCESS_KEY_ID",
+        "secretAccessKey": "SECRET_ACCESS_KEY"
     }
 
 #### Example ~/.aws/credentials
