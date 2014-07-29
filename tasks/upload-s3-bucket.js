@@ -66,7 +66,30 @@ module.exports = function(grunt) {
                         });
                     }else{
                         //console.log(fullPath);
-                        uploadFile(fullPath);
+                        if(options.overwrite != 'yes'){
+                            addTask();
+                            var params = {
+                                Bucket: options.bucket, // required
+                                Key: fullPath // required
+                            };
+                            s3.headObject(params, function(err, data) {
+                                if(err){
+                                    if(err.statusCode == 404){
+                                        uploadFile(fullPath);
+                                        completeTask(true);
+                                    }else{
+                                        console.log('Skipping '+fullPath);
+                                        completeTask(true);
+                                    }
+                                }else{
+                                    //object exists
+                                    console.log('Skipping '+fullPath);
+                                    completeTask(true);
+                                }
+                            });
+                        }else{
+                            uploadFile(fullPath);
+                        }
                     }
                 }
             });
@@ -76,6 +99,7 @@ module.exports = function(grunt) {
 
         var uploadFile = function(fullPath){
             addTask();
+
             var params = {
                 Bucket: options.bucket, // required
                 Key: fullPath, // required
