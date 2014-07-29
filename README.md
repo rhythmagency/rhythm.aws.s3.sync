@@ -1,5 +1,9 @@
 Synchronize files with S3.
 
+#### Simple installation
+
+    $ npm install rhythm.aws.s3.sync
+
 #### Example Gruntfile.js
 
     module.exports = function(grunt) {
