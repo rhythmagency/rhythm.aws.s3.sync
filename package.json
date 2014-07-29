@@ -1,7 +1,11 @@
 {
   "name": "rhythm.aws.s3.sync",
   "version": "0.0.1",
-  "private": true,
+  "repository" :
+  {
+    "type" : "git",
+    "url" : "http://github.com/rhythmagency/rhythm.aws.s3.sync"
+  },
   "dependencies": {
     "aws-sdk": "^2.0.9"
   },
