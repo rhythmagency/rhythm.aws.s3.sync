@@ -3,7 +3,7 @@
  * $ grunt download --bucket=NAME_OF_S3_BUCKET
  *
  * Optional:
- * $ grunt download --bucket=NAME_OF_S3_BUCKET --overwrite=no
+ * $ grunt download --bucket=NAME_OF_S3_BUCKET --overwrite=yes
  */
 module.exports = function(grunt) {
 
@@ -13,7 +13,7 @@ module.exports = function(grunt) {
         'download-s3-bucket': {
             options: {
                 bucket: grunt.option('bucket') || '',
-                overwrite: (grunt.option('overwrite') || 'yes').toLowerCase()
+                overwrite: (grunt.option('overwrite') || 'no').toLowerCase()
             },
             build: {
             }
