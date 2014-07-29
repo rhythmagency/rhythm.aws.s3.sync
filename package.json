@@ -1,10 +1,9 @@
 {
-  "name": "umbraco-media-synch-script",
+  "name": "rhythm.aws.s3.sync",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "aws-sdk": "^2.0.9",
-    "download": "^0.1.18"
+    "aws-sdk": "^2.0.9"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
