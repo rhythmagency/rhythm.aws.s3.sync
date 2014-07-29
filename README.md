@@ -1,7 +1,4 @@
-rhythm.aws.s3.sync
-==================
-
-Synchronize local files with S3.
+Synchronize files with S3.
 
 #### Example Gruntfile.js
 
