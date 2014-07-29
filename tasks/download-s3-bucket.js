@@ -19,9 +19,7 @@ module.exports = function(grunt) {
 
         console.log(options);
 
-        var async = this.async;
-
-        var done = async();
+        var done = this.async();
         var taskCount = 0;
         var allTasksOK = true;
 
@@ -29,7 +27,7 @@ module.exports = function(grunt) {
             ++taskCount;
         };
 
-        var allDone = function(allOK){
+        var completeTask = function(allOK){
             if(!allOK)
                 allTasksOK = false;
 
@@ -44,7 +42,7 @@ module.exports = function(grunt) {
         var processObjectList = function(params, data, err){
             if (err) {
                 console.log(err, err.stack);
-                allDone(false);
+                completeTask(false);
             }else {
                 if(data.IsTruncated && data.Contents.length > 0){
                     params.Marker = data.Contents[data.Contents.length -1].Key;
@@ -66,7 +64,7 @@ module.exports = function(grunt) {
                             console.log('mkdir ' + element.Key);
                             fs.mkdirSync(element.Key);
                         }
-                        allDone(true);
+                        completeTask(true);
                     }else{
                         var skipDownload = false;
                         if(options.overwrite != 'yes'){
@@ -77,7 +75,7 @@ module.exports = function(grunt) {
 
                         if(skipDownload){
                             console.log('Skipping '+element.Key);
-                            allDone(true);
+                            completeTask(true);
                         }else{
                             var params = {Bucket: options.bucket, Key: element.Key};
                             var file = fs.createWriteStream(element.Key);
@@ -91,11 +89,11 @@ module.exports = function(grunt) {
                                 })
                                 .on('success', function(response) {
                                     console.log("Success! "+element.Key);
-                                    allDone(true);
+                                    completeTask(true);
                                 })
                                 .on('error', function(response) {
                                     console.log("Error! "+element.Key);
-                                    allDone(false);
+                                    completeTask(false);
                                 })
                                 .send();
                         }
@@ -103,7 +101,7 @@ module.exports = function(grunt) {
                 });
 
                 //console.log(data);
-                allDone(true);
+                completeTask(true);
             }
         };
 
