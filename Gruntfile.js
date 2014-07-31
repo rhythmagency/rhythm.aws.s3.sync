@@ -8,27 +8,27 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         'download-s3-bucket': {
-            options: {
-                bucket: grunt.option('bucket') || '',
-                overwrite: (grunt.option('overwrite') || 'no').toLowerCase()
-            },
-            build: {
+            'download': {
+                options: {
+                    bucket: grunt.option('bucket') || '',
+                    overwrite: (grunt.option('overwrite') || 'no').toLowerCase()
+                }
             }
         },
         'upload-s3-bucket': {
-            options: {
-                bucket: grunt.option('bucket') || '',
-                overwrite: (grunt.option('overwrite') || 'no').toLowerCase(),
-                files: grunt.option('files') || '.'
-            },
-            build: {
+            'upload': {
+                options: {
+                    bucket: grunt.option('bucket') || '',
+                    overwrite: (grunt.option('overwrite') || 'no').toLowerCase(),
+                    files: grunt.option('files') || '.'
+                }
             }
         },
         'clear-upload-s3-bucket': {
-            options: {
-                bucket: grunt.option('bucket') || ''
-            },
-            build: {
+            'clear-upload': {
+                options: {
+                    bucket: grunt.option('bucket') || ''
+                }
             }
         }
     });

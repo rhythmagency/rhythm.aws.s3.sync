@@ -16,12 +16,8 @@ module.exports = function(grunt) {
             bucket: ''
         });
 
-        console.log(options);
-
         if(fs.existsSync('./awsconfig.json'))
             AWS.config.loadFromPath('./awsconfig.json');
-
-        console.log(AWS.config.credentials);
 
         var s3 = new AWS.S3();
 
@@ -40,7 +36,7 @@ module.exports = function(grunt) {
             --taskCount;
 
             if(taskCount == 0){
-                console.log('All done '+allTasksOK);
+                grunt.log.ok('All done '+allTasksOK);
                 done(allTasksOK);
             }
         };
@@ -57,8 +53,8 @@ module.exports = function(grunt) {
         };
         s3.listMultipartUploads(params, function(err, data) {
             if(err){
-                console.log('Error: listMultipartUploads()');
-                console.log(err, err.stack);
+                grunt.log.error('listMultipartUploads()');
+                grunt.log.debug(err, err.stack);
                 completeTask(false);
             }else{
                 data.Uploads.forEach(function(element, index, array){
@@ -70,11 +66,11 @@ module.exports = function(grunt) {
                     };
                     s3.abortMultipartUpload(params, function(err, data) {
                         if(err){
-                            console.log('Error: abortMultipartUpload()');
-                            console.log(err, err.stack);
+                            grunt.log.error('abortMultipartUpload()');
+                            grunt.log.debug(err, err.stack);
                             completeTask(false);
                         }else{
-                            console.log('Removed uploaded part '+element.UploadId);
+                            grunt.log.ok('Removed uploaded part '+element.UploadId);
                             completeTask(true);
                         }
                     });

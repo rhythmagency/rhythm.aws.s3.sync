@@ -18,12 +18,8 @@ module.exports = function(grunt) {
             files: '.'
         });
 
-        console.log(options);
-
         if(fs.existsSync('./awsconfig.json'))
             AWS.config.loadFromPath('./awsconfig.json');
-
-        console.log(AWS.config.credentials);
 
         var s3 = new AWS.S3();
 
@@ -42,7 +38,7 @@ module.exports = function(grunt) {
             --taskCount;
 
             if(taskCount == 0){
-                console.log('All done '+allTasksOK);
+                grunt.log.ok('All done '+allTasksOK);
                 done(allTasksOK);
             }
         };
@@ -58,14 +54,14 @@ module.exports = function(grunt) {
                         addTask();
                         fs.readdir(fullPath, function(err, files){
                             if(err){
-                                console.log(err, err.stack);
+                                grunt.log.error('readdir() '+fullPath);
+                                grunt.log.debug(err, err.stack);
                                 completeTask(false);
                             }else{
                                 processFiles(fullPath, files);
                             }
                         });
                     }else{
-                        //console.log(fullPath);
                         if(options.overwrite != 'yes'){
                             addTask();
                             var params = {
@@ -78,12 +74,10 @@ module.exports = function(grunt) {
                                         uploadFile(fullPath);
                                         completeTask(true);
                                     }else{
-                                        console.log('Skipping '+fullPath);
                                         completeTask(true);
                                     }
                                 }else{
                                     //object exists
-                                    console.log('Skipping '+fullPath);
                                     completeTask(true);
                                 }
                             });
@@ -127,8 +121,8 @@ module.exports = function(grunt) {
             };
             s3.createMultipartUpload(params, function(err, data) {
                 if(err){
-                    console.log('Error: createMultipartUpload() '+fullPath);
-                    console.log(err, err.stack);
+                    grunt.log.error('createMultipartUpload() '+fullPath);
+                    grunt.log.debug(err, err.stack);
                     completeTask(false);
                 }else{
                     addTask();
@@ -148,8 +142,8 @@ module.exports = function(grunt) {
                     };
                     s3.uploadPart(params, function(err, data) {
                         if(err){
-                            console.log('Error: uploadPart()');
-                            console.log(err, err.stack);
+                            grunt.log.error('uploadPart()');
+                            grunt.log.debug(err, err.stack);
 
                             addTask();
                             var params = {
@@ -159,11 +153,11 @@ module.exports = function(grunt) {
                             };
                             s3.abortMultipartUpload(params, function(err, data) {
                                 if(err){
-                                    console.log('Error: abortMultipartUpload()');
-                                    console.log(err, err.stack);
+                                    grunt.log.error('abortMultipartUpload()');
+                                    grunt.log.debug(err, err.stack);
                                     completeTask(false);
                                 }else{
-                                    console.log('Aborted upload '+fullPath);
+                                    grunt.log.debug('Aborted upload OK '+fullPath);
                                     completeTask(true);
                                 }
                             });
@@ -186,11 +180,11 @@ module.exports = function(grunt) {
                             };
                             s3.completeMultipartUpload(params, function(err, data) {
                                 if(err){
-                                    console.log('Error: completeMultipartUpload()');
-                                    console.log(err, err.stack);
+                                    grunt.log.error('completeMultipartUpload()');
+                                    grunt.log.error(err, err.stack);
                                     completeTask(false);
                                 }else{
-                                    console.log('Uploaded '+fullPath);
+                                    grunt.log.ok('Uploaded '+fullPath);
                                     completeTask(true);
                                 }
                             });
@@ -207,7 +201,8 @@ module.exports = function(grunt) {
         var fullPath = options.files;
         fs.readdir(fullPath, function(err, files){
             if(err){
-                console.log(err, err.stack);
+                grunt.log.error('readdir() '+fullPath);
+                grunt.log.debug(err, err.stack);
                 completeTask(false);
             }else{
                 processFiles(fullPath, files);

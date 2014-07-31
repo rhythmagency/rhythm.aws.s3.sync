@@ -17,12 +17,8 @@ module.exports = function(grunt) {
             overwrite: 'no'
         });
 
-        console.log(options);
-
         if(fs.existsSync('./awsconfig.json'))
             AWS.config.loadFromPath('./awsconfig.json');
-
-        console.log(AWS.config.credentials);
 
         var s3 = new AWS.S3();
 
@@ -41,14 +37,14 @@ module.exports = function(grunt) {
             --taskCount;
 
             if(taskCount == 0){
-                console.log('All done '+allTasksOK);
+                grunt.log.ok('All done '+allTasksOK);
                 done(allTasksOK);
             }
         };
 
         var processObjectList = function(params, data, err){
             if (err) {
-                console.log(err, err.stack);
+                grunt.log.error(err, err.stack);
                 completeTask(false);
             }else {
                 if(data.IsTruncated && data.Contents.length > 0){
@@ -68,7 +64,6 @@ module.exports = function(grunt) {
                 data.Contents.forEach(function(element, index, array){
                     if(path.extname(element.Key) == ''){
                         if(!fs.existsSync(element.Key)) {
-                            console.log('mkdir ' + element.Key);
                             fs.mkdirSync(element.Key);
                         }
                         completeTask(true);
@@ -81,7 +76,6 @@ module.exports = function(grunt) {
                         }
 
                         if(skipDownload){
-                            console.log('Skipping '+element.Key);
                             completeTask(true);
                         }else{
                             var params = {Bucket: options.bucket, Key: element.Key};
@@ -95,11 +89,11 @@ module.exports = function(grunt) {
                                     file.end();
                                 })
                                 .on('success', function(response) {
-                                    console.log("Success! "+element.Key);
+                                    grunt.log.ok(element.Key);
                                     completeTask(true);
                                 })
                                 .on('error', function(response) {
-                                    console.log("Error! "+element.Key);
+                                    grunt.log.error("s3.getObject() "+element.Key);
                                     completeTask(false);
                                 })
                                 .send();
@@ -107,7 +101,6 @@ module.exports = function(grunt) {
                     }
                 });
 
-                //console.log(data);
                 completeTask(true);
             }
         };
