@@ -14,7 +14,7 @@ module.exports = function(grunt) {
         // Merge task-specific and/or target-specific options with these defaults.
         var options = this.options({
             bucket: '',
-            overwrite: 'no',
+            overwrite: false,
             files: '.'
         });
 
@@ -62,7 +62,7 @@ module.exports = function(grunt) {
                             }
                         });
                     }else{
-                        if(options.overwrite != 'yes'){
+                        if(!options.overwrite){
                             addTask();
                             var params = {
                                 Bucket: options.bucket, // required

@@ -1,7 +1,9 @@
-/**
+/*
+ * grunt-rhythm-aws-s3-sync
+ * https://github.com/rhythmagency/rhythm.aws.s3.sync
  *
- * See README.md for usage
- *
+ * Copyright (c) 2014 CJ Hanson at Rhythm
+ * Licensed under the MIT license.
  */
 module.exports = function(grunt) {
     // Project configuration.
@@ -11,7 +13,7 @@ module.exports = function(grunt) {
             'download': {
                 options: {
                     bucket: grunt.option('bucket') || '',
-                    overwrite: (grunt.option('overwrite') || 'no').toLowerCase()
+                    overwrite: grunt.option('overwrite')
                 }
             }
         },
@@ -19,7 +21,7 @@ module.exports = function(grunt) {
             'upload': {
                 options: {
                     bucket: grunt.option('bucket') || '',
-                    overwrite: (grunt.option('overwrite') || 'no').toLowerCase(),
+                    overwrite: grunt.option('overwrite'),
                     files: grunt.option('files') || '.'
                 }
             }
@@ -33,9 +35,9 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.loadTasks('tasks');
+
     grunt.registerTask('download', ['download-s3-bucket']);
     grunt.registerTask('upload', ['upload-s3-bucket']);
     grunt.registerTask('clear-upload', ['clear-upload-s3-bucket']);
-
-    grunt.loadTasks(__dirname + '/tasks');
 };

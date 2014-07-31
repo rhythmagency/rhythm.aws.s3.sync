@@ -14,7 +14,7 @@ module.exports = function(grunt) {
         // Merge task-specific and/or target-specific options with these defaults.
         var options = this.options({
             bucket: '',
-            overwrite: 'no'
+            overwrite: false
         });
 
         if(fs.existsSync('./awsconfig.json'))
@@ -69,7 +69,7 @@ module.exports = function(grunt) {
                         completeTask(true);
                     }else{
                         var skipDownload = false;
-                        if(options.overwrite != 'yes'){
+                        if(!options.overwrite){
                             if(fs.existsSync(element.Key)){
                                 skipDownload = true;
                             }

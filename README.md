@@ -1,46 +1,163 @@
-Synchronize files with S3.
+# grunt-rhythm-aws-s3-sync v0.1.0 [![Build Status](https://travis-ci.org/gruntjs/grunt-contrib-sass.png?branch=master)](https://travis-ci.org/gruntjs/grunt-contrib-sass)
 
-#### Simple installation
+> Sync with Amazon S3 bucket
 
-    $ npm install rhythm.aws.s3.sync
 
-#### Example Gruntfile.js
 
-    module.exports = function(grunt) {
-        //Register the tasks from the rhythm.aws.s3.sync Gruntfile
-        var s3Sync = require('rhythm.aws.s3.sync/Gruntfile.js');
-        s3Sync(grunt);
-        
-        //Continue normal configuration
-        grunt.config.data.pkg = grunt.file.readJSON('package.json');
-        grunt.initConfig(grunt.config.data);
-    };
+## Getting Started
+This plugin requires Grunt `~0.4.5`
 
-#### Usage:
+If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
-    $ grunt download --bucket=NAME_OF_S3_BUCKET
-    $ grunt upload --bucket=NAME_OF_S3_BUCKET --files=REL_PATH_DEFAULT_IS_CURRENT_PATH
+```shell
+npm install grunt-rhythm-aws-s3-sync --save-dev
+```
 
-#### Optionally overwrite files:
+Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
 
-    $ grunt download --bucket=NAME_OF_S3_BUCKET --overwrite=yes
-    $ grunt upload --bucket=NAME_OF_S3_BUCKET --files=REL_PATH_DEFAULT_IS_CURRENT_PATH --overwrite=yes
-    
-#### Clean up aborted uploads: (Amazon charges you storage even for parts of files uploaded and abandoned)
+```js
+grunt.loadNpmTasks('grunt-rhythm-aws-s3-sync');
+```
 
-    $ grunt clear-upload --bucket=NAME_OF_S3_BUCKET
 
-### Amazon credentials are read from ./awsconfig.json with a fallback to ~/.aws/credentials
+## Amazon Credentials
+> Credentials are read from `./awsconfig.json` with a fallback to `~/.aws/credentials`
 
-#### Example awsconfig.json
+#### `awsconfig.json`
+```json
+{
+    "accessKeyId": "ACCESS_KEY_ID",
+    "secretAccessKey": "SECRET_ACCESS_KEY"
+}
+```
 
-    {
-        "accessKeyId": "ACCESS_KEY_ID",
-        "secretAccessKey": "SECRET_ACCESS_KEY"
+#### `~/.aws/credentials`
+```ini
+[default]
+aws_access_key_id = ACCESS_KEY_ID
+aws_secret_access_key = SECRET_ACCESS_KEY
+```
+
+
+## Download task
+_Run this task with the `grunt download-s3-bucket` command._
+
+### Options
+
+#### bucket
+
+Type: `String`
+
+S3 bucket name.
+
+
+#### overwrite
+
+Type: `Boolean`  
+Default: `false`
+
+Allow overwriting of local files.
+
+
+### Examples
+
+#### Example config
+
+```javascript
+grunt.initConfig({
+  'download-s3-bucket': {              // Task
+    'download': {                      // Target
+      options: {                       // Target options
+        bucket: 'S3_BUCKET_NAME',
+        overwrite: true
+      }
     }
+  }
+});
 
-#### Example ~/.aws/credentials
+grunt.loadNpmTasks('grunt-rhythm-aws-s3-sync');
 
-    [default]
-    aws_access_key_id = ACCESS_KEY_ID
-    aws_secret_access_key = SECRET_ACCESS_KEY
+grunt.registerTask('default', ['download-s3-bucket']);
+```
+
+
+## Upload task
+_Run this task with the `grunt upload-s3-bucket` command._
+
+### Options
+
+#### bucket
+
+Type: `String`
+
+S3 bucket name.
+
+
+#### overwrite
+
+Type: `Boolean`  
+Default: `false`
+
+Allow overwriting of remote files.
+
+
+#### files
+
+Type: `String`  
+Default: `.`
+
+Path to folder to upload.
+
+### Examples
+
+#### Example config
+
+```javascript
+grunt.initConfig({
+  'upload-s3-bucket': {                // Task
+    'upload': {                        // Target
+      options: {                       // Target options
+        bucket: 'S3_BUCKET_NAME',
+        overwrite: false,
+        files: 'media'
+      }
+    }
+  }
+});
+
+grunt.loadNpmTasks('grunt-rhythm-aws-s3-sync');
+
+grunt.registerTask('default', ['upload-s3-bucket']);
+```
+
+
+## Clear Abandoned Uploads task
+_Run this task with the `grunt clear-upload-s3-bucket` command._
+
+### Options
+
+#### bucket
+
+Type: `String`
+
+S3 bucket name.
+
+### Examples
+
+#### Example config
+
+```javascript
+grunt.initConfig({
+  'clear-upload-s3-bucket': {          // Task
+    'clear-upload': {                  // Target
+      options: {                       // Target options
+        bucket: 'S3_BUCKET_NAME'
+      }
+    }
+  }
+});
+
+grunt.loadNpmTasks('grunt-rhythm-aws-s3-sync');
+
+grunt.registerTask('default', ['upload-s3-bucket']);
+```
