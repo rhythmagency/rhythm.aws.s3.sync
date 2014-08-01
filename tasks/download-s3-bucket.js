@@ -5,17 +5,25 @@
 
 'use strict';
 
-var fs = require('fs');
+var fs = require('fs-extra');
 var path = require('path');
+var crypto = require('crypto');
 var AWS = require('aws-sdk');
+
+// Temp w/ Automatically track and cleanup files at exit
+var temp = require('temp').track();
 
 module.exports = function(grunt) {
     grunt.registerMultiTask('download-s3-bucket', 'Download bucket from Amazon S3', function() {
         // Merge task-specific and/or target-specific options with these defaults.
         var options = this.options({
             bucket: '',
-            overwrite: false
+            overwrite: false,
+            'remote-src': '',
+            'local-dst': '.'
         });
+
+        fs.ensureDirSync(options['local-dst']);
 
         if(fs.existsSync('./awsconfig.json'))
             AWS.config.loadFromPath('./awsconfig.json');
@@ -48,53 +56,82 @@ module.exports = function(grunt) {
                 completeTask(false);
             }else {
                 if(data.IsTruncated && data.Contents.length > 0){
-                    params.Marker = data.Contents[data.Contents.length -1].Key;
+                    var subParams = params;
+                    subParams.Marker = data.Contents[data.Contents.length -1].Key;
 
                     addTask();
-
-                    s3.listObjects(params, function(err, data) {
-                        processObjectList(params, data, err);
+                    s3.listObjects(subParams, function(err, data) {
+                        processObjectList(subParams, data, err);
                     });
                 }
 
-                for(var i = 0; i < data.Contents.length; ++i){
-                    addTask();
-                }
-
                 data.Contents.forEach(function(element, index, array){
-                    if(path.extname(element.Key) == ''){
-                        if(!fs.existsSync(element.Key)) {
-                            fs.mkdirSync(element.Key);
+                    if(options['remote-src'].length > 0){
+                        var relativePath = path.relative(element.Key, options['remote-src']);
+                        if(relativePath.substr(0, 2) == '..' && relativePath.substr(-2, 2) == '..'){
+                            //include
+                        }else{
+                            //skip, not in specified remote src folder
+                            return;
                         }
-                        completeTask(true);
+                    }
+
+                    var localPath = path.join(options['local-dst'], element.Key);
+                    var params = {Bucket: options.bucket, Key: element.Key};
+                    var remoteLastModified = element.LastModified;
+
+                    if(path.extname(element.Key) == ''){
+                        //no need to deal with directory keys because we are using ensureFile below
+                        return;
                     }else{
                         var skipDownload = false;
-                        if(!options.overwrite){
-                            if(fs.existsSync(element.Key)){
+                        var fileExists = fs.existsSync(localPath);
+                        if(fileExists){
+                            if(!options.overwrite) {
                                 skipDownload = true;
+                            }else{
+                                var stat = fs.statSync(localPath);
+                                params.IfModifiedSince = stat.mtime;
                             }
                         }
 
                         if(skipDownload){
-                            completeTask(true);
+                            return;
                         }else{
-                            var params = {Bucket: options.bucket, Key: element.Key};
-                            var file = fs.createWriteStream(element.Key);
+                            var timestamp = new Date();
+                            timestamp.setYear(timestamp.getYear()-10);
 
+                            var stream = temp.createWriteStream();
+
+                            addTask();
                             s3.getObject(params)
                                 .on('httpData', function(chunk) {
-                                    file.write(chunk);
+                                    stream.write(chunk);
                                 })
                                 .on('httpDone', function() {
-                                    file.end();
+                                    //Always runs regardless of success/error. And runs before success/error
+                                    stream.end();
                                 })
                                 .on('success', function(response) {
-                                    grunt.log.ok(element.Key);
+                                    fs.ensureFileSync(localPath);
+
+                                    //copy temp file to our destination
+                                    fs.copySync(stream.path, localPath);
+
+                                    //Write the remote timestamp to our local file
+                                    fs.utimesSync(localPath, remoteLastModified, remoteLastModified);
+
+                                    grunt.log.ok(localPath);
                                     completeTask(true);
                                 })
                                 .on('error', function(response) {
-                                    grunt.log.error("s3.getObject() "+element.Key);
-                                    completeTask(false);
+                                    if(fileExists && response.statusCode == 304){
+                                        grunt.verbose.writeln('Skipped not modified ', localPath);
+                                        completeTask(true);
+                                    }else{
+                                        grunt.log.error("s3.getObject() "+element.Key, response);
+                                        completeTask(false);
+                                    }
                                 })
                                 .send();
                         }
@@ -115,7 +152,6 @@ module.exports = function(grunt) {
         };
 
         addTask();
-
         s3.listObjects(params, function(err, data) {
             processObjectList(params, data, err);
         });

@@ -13,7 +13,9 @@ module.exports = function(grunt) {
             'download': {
                 options: {
                     bucket: grunt.option('bucket') || '',
-                    overwrite: grunt.option('overwrite')
+                    overwrite: grunt.option('overwrite'),
+                    'remote-src': grunt.option('remote-src') || '',
+                    'local-dst': grunt.option('local-dst') || '.'
                 }
             }
         },
@@ -36,8 +38,4 @@ module.exports = function(grunt) {
     });
 
     grunt.loadTasks('tasks');
-
-    grunt.registerTask('download', ['download-s3-bucket']);
-    grunt.registerTask('upload', ['upload-s3-bucket']);
-    grunt.registerTask('clear-upload', ['clear-upload-s3-bucket']);
 };

@@ -58,6 +58,13 @@ Default: `false`
 
 Allow overwriting of local files.
 
+#### local-dst
+Type: `String`  
+Default: `.`
+
+Local destination to download files to.
+
+
 
 ### Examples
 
@@ -132,6 +139,7 @@ grunt.registerTask('default', ['upload-s3-bucket']);
 
 
 ## Clear Abandoned Uploads task
+######_(Amazon charges you storage even for parts of files uploaded and abandoned)_
 _Run this task with the `grunt clear-upload-s3-bucket` command._
 
 ### Options
