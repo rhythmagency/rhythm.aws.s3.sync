@@ -1,4 +1,4 @@
-# grunt-rhythm-aws-s3-sync v0.1.7
+# grunt-rhythm-aws-s3-sync v0.1.8
 > Sync with Amazon S3 bucket
 
 [![build status](https://travis-ci.org/rhythmagency/rhythm.aws.s3.sync.png?branch=master)](https://travis-ci.org/rhythmagency/rhythm.aws.s3.sync)
@@ -79,14 +79,16 @@ Remote source folder to download files from.
 
 ```javascript
 grunt.initConfig({
-  'download-s3-bucket': {              // Task
-    'download': {                      // Target
-      options: {                       // Target options
-        bucket: 'S3_BUCKET_NAME',
-        overwrite: true
-      }
+    'download-s3-bucket': {
+        'download': {
+            options: {
+                bucket: 'S3_BUCKET_NAME',
+                overwrite: true,
+                'remote-src': '/',
+                'local-dst': '.'
+            }
+        }
     }
-  }
 });
 
 grunt.loadNpmTasks('grunt-rhythm-aws-s3-sync');
@@ -128,15 +130,15 @@ Path to folder to upload.
 
 ```javascript
 grunt.initConfig({
-  'upload-s3-bucket': {                // Task
-    'upload': {                        // Target
-      options: {                       // Target options
-        bucket: 'S3_BUCKET_NAME',
-        overwrite: false,
-        files: 'media'
-      }
+    'upload-s3-bucket': {
+        'upload': {
+            options: {
+                bucket: 'S3_BUCKET_NAME',
+                overwrite: false,
+                files: 'media'
+            }
+        }
     }
-  }
 });
 
 grunt.loadNpmTasks('grunt-rhythm-aws-s3-sync');
@@ -163,13 +165,13 @@ S3 bucket name.
 
 ```javascript
 grunt.initConfig({
-  'clear-upload-s3-bucket': {          // Task
-    'clear-upload': {                  // Target
-      options: {                       // Target options
-        bucket: 'S3_BUCKET_NAME'
-      }
+    'clear-upload-s3-bucket': {
+        'clear-upload': {
+            options: {
+                bucket: 'S3_BUCKET_NAME'
+            }
+        }
     }
-  }
 });
 
 grunt.loadNpmTasks('grunt-rhythm-aws-s3-sync');
