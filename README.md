@@ -1,8 +1,9 @@
 # grunt-rhythm-aws-s3-sync v0.1.0
-[![Build Status](https://travis-ci.org/rhythmagency/rhythm.aws.s3.sync.png?branch=master)](https://travis-ci.org/rhythmagency/rhythm.aws.s3.sync)
-[![downloads per month](http://img.shields.io/npm/dm/grunt-rhythm-aws-s3-sync.svg)](https://www.npmjs.org/package/grunt-rhythm-aws-s3-sync)
 
-> Sync with Amazon S3 bucket
+[![Build status](https://travis-ci.org/rhythmagency/rhythm.aws.s3.sync.png?branch=master)](https://travis-ci.org/rhythmagency/rhythm.aws.s3.sync)
+[![Downloads per month](http://img.shields.io/npm/dm/grunt-rhythm-aws-s3-sync.svg)](https://www.npmjs.org/package/grunt-rhythm-aws-s3-sync)
+
+Sync with Amazon S3 bucket
 
 
 
