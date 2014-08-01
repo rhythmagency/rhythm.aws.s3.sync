@@ -14,7 +14,7 @@ module.exports = function(grunt) {
                 options: {
                     bucket: grunt.option('bucket') || '',
                     overwrite: grunt.option('overwrite'),
-                    'remote-src': grunt.option('remote-src') || '',
+                    'remote-src': grunt.option('remote-src') || '/',
                     'local-dst': grunt.option('local-dst') || '.'
                 }
             }

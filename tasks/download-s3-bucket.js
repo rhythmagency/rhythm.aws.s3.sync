@@ -19,7 +19,7 @@ module.exports = function(grunt) {
         var options = this.options({
             bucket: '',
             overwrite: false,
-            'remote-src': '',
+            'remote-src': '/',
             'local-dst': '.'
         });
 

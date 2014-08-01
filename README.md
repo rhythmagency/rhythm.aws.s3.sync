@@ -1,4 +1,4 @@
-# grunt-rhythm-aws-s3-sync v0.1.6
+# grunt-rhythm-aws-s3-sync v0.1.7
 > Sync with Amazon S3 bucket
 
 [![build status](https://travis-ci.org/rhythmagency/rhythm.aws.s3.sync.png?branch=master)](https://travis-ci.org/rhythmagency/rhythm.aws.s3.sync)
@@ -68,7 +68,7 @@ Local destination to download files to.
 
 #### remote-src
 Type: `String`  
-Default: ``
+Default: `/`
 
 Remote source folder to download files from.
 
