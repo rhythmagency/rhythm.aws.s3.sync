@@ -2,7 +2,7 @@
 > Sync with Amazon S3 bucket
 
 [![build status](https://travis-ci.org/rhythmagency/rhythm.aws.s3.sync.png?branch=master)](https://travis-ci.org/rhythmagency/rhythm.aws.s3.sync)
-[![downloads per month](http://img.shields.io/npm/dm/grunt-rhythm-aws-s3-sync.svg)](https://www.npmjs.org/package/grunt-rhythm-aws-s3-sync)
+[![downloads per month](http://img.shields.io/npm/dm/grunt-rhythm-aws-s3-sync.png)](https://www.npmjs.org/package/grunt-rhythm-aws-s3-sync)
 
 
 
