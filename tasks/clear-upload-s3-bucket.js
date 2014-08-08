@@ -16,8 +16,12 @@ module.exports = function(grunt) {
             bucket: ''
         });
 
-        if(fs.existsSync('./awsconfig.json'))
+        if(fs.existsSync('./awsconfig.json')) {
+            grunt.verbose.writeln('Loading credentials from awsconfig.json');
             AWS.config.loadFromPath('./awsconfig.json');
+        }else{
+            grunt.verbose.writeln('Loading credentials from ~/.aws/credentials');
+        }
 
         var s3 = new AWS.S3();
 
