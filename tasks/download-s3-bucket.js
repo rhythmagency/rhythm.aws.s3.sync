@@ -19,10 +19,12 @@ module.exports = function(grunt) {
         var options = this.options({
             bucket: '',
             overwrite: false,
-            'remote-src': '/',
+            'remote-src': '',
             'local-dst': '.'
         });
 
+        //remove preceding slash
+        options['remote-src'] = options['remote-src'].replace(/^\/+/,'');
         fs.ensureDirSync(options['local-dst']);
 
         if(fs.existsSync('./awsconfig.json')) {
@@ -70,7 +72,9 @@ module.exports = function(grunt) {
                 }
 
                 data.Contents.forEach(function(element, index, array){
+
                     if(options['remote-src'].length > 0){
+
                         var relativePath = path.relative(element.Key, options['remote-src']);
                         if(relativePath.substr(0, 2) == '..' && relativePath.substr(-2, 2) == '..'){
                             //include
