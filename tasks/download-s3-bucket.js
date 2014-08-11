@@ -7,7 +7,6 @@
 
 var fs = require('fs-extra');
 var path = require('path');
-var crypto = require('crypto');
 var AWS = require('aws-sdk');
 
 // Temp w/ Automatically track and cleanup files at exit
@@ -84,7 +83,11 @@ module.exports = function(grunt) {
                         }
                     }
 
-                    var localPath = path.join(options['local-dst'], element.Key);
+                    var localRelKeyPath = element.Key;
+                    if(options['remote-src'].length > 0)
+                        localRelKeyPath = element.Key.split(options['remote-src']).join('');
+                    var localPath = path.join(options['local-dst'], localRelKeyPath);
+
                     var params = {Bucket: options.bucket, Key: element.Key};
                     var remoteLastModified = element.LastModified;
 
