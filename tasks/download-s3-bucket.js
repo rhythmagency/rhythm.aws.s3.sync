@@ -132,6 +132,9 @@ module.exports = function(grunt) {
                                     //Write the remote timestamp to our local file
                                     fs.utimesSync(localPath, remoteLastModified, remoteLastModified);
 
+                                    grunt.verbose.writeln('Removing temp file ', stream.path);
+                                    fs.removeSync(stream.path);
+
                                     grunt.log.ok(localPath);
                                     completeTask(true);
                                 })
