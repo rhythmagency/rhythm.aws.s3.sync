@@ -158,7 +158,7 @@ module.exports = function(grunt) {
             Delimiter: '',
             //EncodingType: 'url',
             Marker: '',
-            MaxKeys: 1000,
+            MaxKeys: 100,
             Prefix: ''
         };
 
