@@ -98,11 +98,15 @@ module.exports = function(grunt) {
                         var skipDownload = false;
                         var fileExists = fs.existsSync(localPath);
                         if(fileExists){
-                            if(!options.overwrite) {
-                                skipDownload = true;
-                            }else{
-                                var stat = fs.statSync(localPath);
-                                params.IfModifiedSince = stat.mtime;
+                            var stat = fs.statSync(localPath);
+                            if(stat.size == 0){
+                                fs.removeSync(localPath);
+                            }else {
+                                if (!options.overwrite) {
+                                    skipDownload = true;
+                                } else {
+                                    params.IfModifiedSince = stat.mtime;
+                                }
                             }
                         }
 
@@ -131,6 +135,14 @@ module.exports = function(grunt) {
 
                                     //Write the remote timestamp to our local file
                                     fs.utimesSync(localPath, remoteLastModified, remoteLastModified);
+
+                                    var stat = fs.statSync(localPath);
+                                    if(stat.size == 0){
+                                        grunt.verbose.writeln('Wrote 0 byte file file ', localPath);
+
+                                        stat = fs.statSync(stream.path);
+                                        grunt.verbose.writeln('Tmp file was '+stat.size+' bytes.');
+                                    }
 
                                     grunt.verbose.writeln('Removing temp file ', stream.path);
                                     fs.removeSync(stream.path);
