@@ -8,9 +8,7 @@
 var fs = require('fs-extra');
 var path = require('path');
 var AWS = require('aws-sdk');
-
-// Temp w/ Automatically track and cleanup files at exit
-var temp = require('temp').track();
+var Guid = require('guid');
 
 module.exports = function(grunt) {
     grunt.registerMultiTask('download-s3-bucket', 'Download bucket from Amazon S3', function() {
@@ -51,6 +49,7 @@ module.exports = function(grunt) {
 
             if(taskCount == 0){
                 grunt.log.ok('All done '+allTasksOK);
+                fs.removeSync('s3-tmp');
                 done(allTasksOK);
             }
         };
@@ -116,7 +115,11 @@ module.exports = function(grunt) {
                             var timestamp = new Date();
                             timestamp.setYear(timestamp.getYear()-10);
 
-                            var stream = temp.createWriteStream();
+                            var guid = Guid.create();
+                            var tmpPath = 's3-tmp/'+guid;
+                            fs.ensureDirSync('s3-tmp');
+                            fs.ensureFileSync(tmpPath);
+                            var stream = fs.createWriteStream(tmpPath);
 
                             addTask();
                             s3.getObject(params)
@@ -138,7 +141,7 @@ module.exports = function(grunt) {
 
                                     var stat = fs.statSync(localPath);
                                     if(stat.size == 0){
-                                        grunt.verbose.writeln('Wrote 0 byte file file ', localPath);
+                                        grunt.verbose.writeln('Wrote 0 byte file ', localPath);
 
                                         stat = fs.statSync(stream.path);
                                         grunt.verbose.writeln('Tmp file was '+stat.size+' bytes.');
