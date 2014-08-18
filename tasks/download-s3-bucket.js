@@ -83,8 +83,11 @@ module.exports = function(grunt) {
                     }
 
                     var localRelKeyPath = element.Key;
-                    if(options['remote-src'].length > 0)
-                        localRelKeyPath = element.Key.split(options['remote-src']).join('');
+                    if(options['remote-src'].length > 0) {
+                        var rmIdx = element.Key.indexOf(options['remote-src']);
+                        localRelKeyPath = element.Key.substr(rmIdx + options['remote-src'].length+1);
+                    }
+
                     var localPath = path.join(options['local-dst'], localRelKeyPath);
 
                     var params = {Bucket: options.bucket, Key: element.Key};
