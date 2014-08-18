@@ -149,6 +149,8 @@ module.exports = function(grunt) {
                                     grunt.log.ok(localPath);
                                     completeTask(true);
                                 }else{
+                                    fs.removeSync(stream.path);
+
                                     if(fileExists && statusCode == 304){
                                         grunt.verbose.writeln('Skipped not modified ', localPath);
                                         completeTask(true);
