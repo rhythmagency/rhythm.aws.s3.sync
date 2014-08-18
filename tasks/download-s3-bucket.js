@@ -8,7 +8,7 @@
 var fs = require('fs-extra');
 var path = require('path');
 var AWS = require('aws-sdk');
-var Guid = require('guid');
+var Uuid = require('node-uuid');
 
 module.exports = function(grunt) {
     grunt.registerMultiTask('download-s3-bucket', 'Download bucket from Amazon S3', function() {
@@ -118,8 +118,8 @@ module.exports = function(grunt) {
                             var timestamp = new Date();
                             timestamp.setYear(timestamp.getYear()-10);
 
-                            var guid = Guid.create();
-                            var tmpPath = 's3-tmp/'+guid;
+                            var uuid = Uuid.v1();
+                            var tmpPath = 's3-tmp/'+uuid;
                             fs.ensureDirSync('s3-tmp');
                             fs.ensureFileSync(tmpPath);
                             var stream = fs.createWriteStream(tmpPath);
