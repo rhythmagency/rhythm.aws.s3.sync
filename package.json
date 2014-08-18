@@ -1,6 +1,6 @@
 {
   "name": "grunt-rhythm-aws-s3-sync",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "repository": {
     "type": "git",
     "url": "http://github.com/rhythmagency/rhythm.aws.s3.sync"

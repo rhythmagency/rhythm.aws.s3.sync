@@ -123,17 +123,10 @@ module.exports = function(grunt) {
                             fs.ensureDirSync('s3-tmp');
                             fs.ensureFileSync(tmpPath);
                             var stream = fs.createWriteStream(tmpPath);
-
-                            addTask();
-                            s3.getObject(params)
-                                .on('httpData', function(chunk) {
-                                    stream.write(chunk);
-                                })
-                                .on('httpDone', function() {
-                                    //Always runs regardless of success/error. And runs before success/error
-                                    stream.end();
-                                })
-                                .on('success', function(response) {
+                            var downloadSuccess = false;
+                            var statusCode = 0;
+                            stream.on('finish', function() {
+                                if(downloadSuccess){
                                     fs.ensureFileSync(localPath);
 
                                     //copy temp file to our destination
@@ -155,15 +148,33 @@ module.exports = function(grunt) {
 
                                     grunt.log.ok(localPath);
                                     completeTask(true);
-                                })
-                                .on('error', function(response) {
-                                    if(fileExists && response.statusCode == 304){
+                                }else{
+                                    if(fileExists && statusCode == 304){
                                         grunt.verbose.writeln('Skipped not modified ', localPath);
                                         completeTask(true);
                                     }else{
-                                        grunt.log.error("s3.getObject() "+element.Key, response);
+                                        grunt.log.error("s3.getObject() "+element.Key, statusCode);
                                         completeTask(false);
                                     }
+                                }
+                            });
+
+                            addTask();
+                            s3.getObject(params)
+                                .on('httpData', function(chunk) {
+                                    stream.write(chunk);
+                                })
+                                .on('httpDone', function() {
+                                    //Always runs regardless of success/error. And runs before success/error
+                                })
+                                .on('success', function(response) {
+                                    downloadSuccess = true;
+                                    stream.end();
+                                })
+                                .on('error', function(response) {
+                                    statusCode = response.statusCode;
+                                    downloadSuccess = false;
+                                    stream.end();
                                 })
                                 .send();
                         }
