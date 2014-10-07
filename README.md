@@ -1,4 +1,4 @@
-# grunt-rhythm-aws-s3-sync v0.1.8
+# grunt-rhythm-aws-s3-sync v0.2.9
 > Sync with Amazon S3 bucket
 
 [![build status](https://travis-ci.org/rhythmagency/rhythm.aws.s3.sync.png?branch=master)](https://travis-ci.org/rhythmagency/rhythm.aws.s3.sync)
